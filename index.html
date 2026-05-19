@@ -1,377 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Card - Database Only</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <title>NYINYISOE DOE SERVICE</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDCyatUIpsHJjxOP4YwkY-VRYmbpV9Ji7M",
+          authDomain: "doe-servic.firebaseapp.com",
+          projectId: "doe-servic",
+          storageBucket: "doe-servic.firebasestorage.app",
+          messagingSenderId: "70527024969",
+          appId: "1:70527024969:web:0eea5de1f4e2ef19d6e498",
+          measurementId: "G-6D1JTDD0YD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
     <style>
-        :root {
-            --main-color: #b89a5b;
-            --font-style: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            font-family: var(--font-style);
-        }
-
-        .controls {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .save-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .firebase-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .firebase-btn:disabled {
-            background-color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        #captureArea {
-            padding: 20px;
-            background: #f4f4f4;
-        }
-
-        .card {
-            width: 340px;
-            background-color: white;
-            border-radius: 30px;
+        body { font-family: 'Inter', sans-serif; }
+        .marquee {
             overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-            border: 3px solid var(--main-color);
-            text-align: center;
-            position: relative;
-        }
-
-        .header-black {
-            background-color: #000;
-            height: 110px;
-            padding-top: 20px;
-        }
-
-        .header-title {
-            color: var(--main-color);
+            white-space: nowrap;
+            background: #06C755;
+            color: white;
+            padding: 12px 0;
             font-weight: bold;
-            letter-spacing: 2px;
-            margin: 0;
-            outline: none;
-            text-transform: uppercase;
         }
-
-        .profile-img-container {
-            width: 140px;
-            height: 140px;
-            background-color: white;
-            border-radius: 50%;
-            margin: -70px auto 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border: 2px solid white;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .profile-img {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .content { padding: 20px 25px 10px; }
-
-        .name {
-            font-size: 24px;
-            font-weight: 800;
-            color: #222;
-            margin-bottom: 15px;
+        .marquee p {
             display: inline-block;
-            outline: none;
+            padding-left: 100%;
+            animation: marquee 15s linear infinite;
         }
-
-        .info-table {
-            width: 100%;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
         }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-
-        .label { font-weight: bold; color: #333; }
-
-        .value {
-            color: #666;
-            word-break: break-all;
-            text-align: right;
-            outline: none;
-            min-width: 100px;
-        }
-
-        .recovery-text {
-            font-size: 13px;
-            color: #d9534f;
-            font-weight: bold;
-            margin: 10px 0;
-            padding: 5px;
-            border-top: 1px dashed #ddd;
-            outline: none;
-        }
-
-        .card-footer {
-            background-color: #fff;
-            border-top: 1px solid #eee;
-            padding: 15px 10px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 13px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .line-icon {
-            background-color: #00c300;
-            color: white;
-            padding: 4px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-        #fileInput { display: none; }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 antialiased pb-24">
 
-    <div class="controls">
-        <input type="color" id="colorPicker" value="#b89a5b" onchange="updateColor(this.value)">
-        <button class="firebase-btn" id="uploadBtn" onclick="uploadToFirebase()">Save Data ☁️</button>
-        <button class="save-btn" onclick="saveAsImage()">Download Card 📥</button>
-    </div>
+    <header class="bg-indigo-700 text-white text-center py-12 px-4 shadow-lg">
+        <h1 class="text-4xl font-black mb-2 tracking-wide uppercase">NYINYISOE DOE SERVICE</h1>
+        <p class="text-indigo-100 max-w-md mx-auto text-sm italic">
+            ထိုင်းရောက်မြန်မာအလုပ်သမားများအတွက် DOE ဝန်ဆောင်မှုများကို အမြန်ဆုံးနှင့် အမှန်ကန်ဆုံး ဆောင်ရွက်ပေးနေပါသည်။
+        </p>
+    </header>
 
-    <div id="captureArea">
-        <div class="card" id="profileCard">
-            <div class="header-black">
-                <h3 class="header-title" id="cardTitle" contenteditable="true">DOE FOREIGNER</h3>
-            </div>
+    <main class="max-w-6xl mx-auto px-4 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">ကျွန်ုပ်တို့၏ ဝန်ဆောင်မှုများ</h2>
+            <div class="w-20 h-1.5 bg-indigo-600 mx-auto rounded-full mb-4"></div>
+            <p class="text-red-600 font-black text-lg">** ဝန်ဆောင်ခ ကြိုလွှဲစရာမလို | အကောင့်ရမှ ငွေချေပါ **</p>
+        </div>
 
-            <div class="profile-container" onclick="document.getElementById('fileInput').click()">
-                <div class="profile-img-container">
-                    <img src="https://via.placeholder.com/130" class="profile-img" id="displayImg">
-                </div>
-                <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
-            </div>
-
-            <div class="content">
-                <div class="name" id="cardName" contenteditable="true">Name</div>
-                
-                <div class="info-table">
-                    <div class="info-row">
-                        <span class="label">Gmail:</span>
-                        <span class="value" id="cardGmail" contenteditable="true">yourname@hotmail.com</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Password:</span>
-                        <span class="value" id="cardPassword" contenteditable="true">112025Day</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">PIN Code:</span>
-                        <span class="value" id="cardPin" contenteditable="true">112025</span>
+        <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8 mb-20">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 flex flex-col justify-between hover:border-indigo-500 hover:shadow-2xl transition-all">
+                <div>
+                    <span class="bg-indigo-600 text-white text-[11px] font-black px-4 py-1.5 rounded-full shadow-sm inline-block uppercase">Service 01</span>
+                    <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">DOE အကောင့်အသစ်ဖွင့်ခြင်း</h3>
+                    <div class="mb-4"><span class="text-4xl font-black text-indigo-600">500</span> <span class="text-slate-400 font-bold uppercase">Baht</span></div>
+                    <div class="space-y-4 border-t border-slate-100 pt-6 text-sm">
+                        <p class="font-bold text-slate-500 italic">⏱️ ကြာမြင့်ချိန်: ၁ ရက်အတွင်း</p>
+                        <ul class="text-slate-600 space-y-3">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-indigo-500"></i> Passport မျက်နှာပြင် ဓာတ်ပုံ</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-indigo-500"></i> Work Permit စာရွက် (သို့) ကတ်</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-indigo-500"></i> ထိုင်းဖုန်းနံပါတ်</li>
+                        </ul>
                     </div>
                 </div>
-
-                <div class="recovery-text" id="cardRecovery" contenteditable="true">
-                    အကောင့်ဆယ်ချင်သူများဆက်သွယ်ရန်
-                </div>
+                <a href="https://line.me/ti/p/~0617718247" class="mt-10 w-full bg-indigo-600 text-white text-center font-black py-4 rounded-2xl hover:bg-indigo-700 shadow-lg block">အချက်အလက်ပို့ရန်</a>
             </div>
 
-            <div class="card-footer">
-                <div class="contact-item">
-                    <i class="fab fa-line line-icon"></i>
-                    <span id="cardLine" contenteditable="true">Line ID: 0617718247</span>
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 flex flex-col justify-between hover:border-amber-500 hover:shadow-2xl transition-all">
+                <div>
+                    <span class="bg-amber-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full shadow-sm inline-block uppercase">Service 02</span>
+                    <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">DOE အကောင့် ပြန်ဆယ်ခြင်း</h3>
+                    <div class="mb-2"><span class="text-4xl font-black text-amber-500">800</span> <span class="text-slate-400 font-bold uppercase">Baht</span></div>
+                    <p class="text-xs text-amber-600 font-black italic mb-4">** အမြန်လိုပါက "အမြန်ဈေး" သီးသန့်ရှိပါသည် **</p>
+                    <div class="space-y-4 border-t border-slate-100 pt-6 text-sm">
+                        <p class="font-bold text-slate-500 italic">⏱️ ကြာမြင့်ချိန်: ၂ ရက်အတွင်း</p>
+                        <ul class="text-slate-600 space-y-3">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-amber-500"></i> Passport မျက်နှာပြင် ဓာတ်ပုံ</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-amber-500"></i> Work Permit စာရွက် (သို့) ကတ်</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-amber-500"></i> ထိုင်းဖုန်းနံပါတ်</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="contact-item">
-                    <i class="fas fa-phone-alt" style="color: #444;"></i>
-                    <span id="cardPhone" contenteditable="true">0940460610</span>
+                <a href="https://line.me/ti/p/~0617718247" class="mt-10 w-full bg-amber-500 text-white text-center font-black py-4 rounded-2xl hover:bg-amber-600 shadow-lg block">အကောင့်ပြန်ဆယ်ရန်</a>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 flex flex-col justify-between hover:border-purple-500 hover:shadow-2xl transition-all">
+                <div>
+                    <span class="bg-purple-600 text-white text-[11px] font-black px-4 py-1.5 rounded-full shadow-sm inline-block uppercase">Service 03</span>
+                    <h3 class="text-xl font-bold text-slate-900 mt-6 mb-2">DOE အကောင့် Update တင်ခြင်း</h3>
+                    <div class="mb-2"><span class="text-4xl font-black text-purple-600">1000</span> <span class="text-slate-400 font-bold uppercase">Baht</span></div>
+                    <div class="space-y-4 border-t border-slate-100 pt-6 text-sm">
+                        <p class="font-bold text-slate-500 italic">⏱️ ကြာမြင့်ချိန်: ၂ ရက်အတွင်း</p>
+                        <ul class="text-slate-600 space-y-3">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-up-long text-purple-600"></i> Passport မျက်နှာပြင် ဓာတ်ပုံ</li>
+                            <li class="flex items-center gap-2 text-red-600 font-bold"><i class="fa-solid fa-id-card"></i> Work Permit Card (မဖြစ်မနေပါရမည်)</li>
+                            <li class="flex items-center gap-2 text-indigo-700 font-bold italic">အကောင့်အတွက် အမြဲတမ်း Free Support</li>
+                        </ul>
+                    </div>
+                </div>
+                <a href="https://line.me/ti/p/~0617718247" class="mt-10 w-full bg-purple-600 text-white text-center font-black py-4 rounded-2xl hover:bg-purple-700 shadow-lg block">Update တင်ရန်</a>
+            </div>
+        </div>
+
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-black text-slate-900 uppercase">အမေးများသော မေးခွန်းများ (FAQ)</h2>
+                <div class="w-16 h-1.5 bg-indigo-600 mx-auto mt-4 rounded-full"></div>
+            </div>
+            <div class="space-y-5">
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+                    <h4 class="font-extrabold text-indigo-700 mb-2 italic">Q. ဝန်ဆောင်ခကို ကြိုပေးရမှာလား?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed pl-4 border-l-4 border-indigo-100">လုံးဝမလိုပါဘူးဗျာ။ အလုပ်အောင်မြင်ပြီး အကောင့်ရရှိမှသာ ဝန်ဆောင်ခ ပေးချေရမှာဖြစ်လို့ စိတ်ချယုံကြည်စွာ အပ်နှံနိုင်ပါတယ်။</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+                    <h4 class="font-extrabold text-indigo-700 mb-2 italic">Q. ကိုယ်ရေးအချက်အလက် လုံခြုံရေးကော စိတ်ချရလား?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed pl-4 border-l-4 border-indigo-100">ဟုတ်ကဲ့၊ ကျွန်ုပ်တို့သည် Customer များ၏ လုံခြုံရေးကို အဓိကထား ဆောင်ရွက်ပေးနေခြင်းဖြစ်ပြီး အချက်အလက်များ လုံခြုံမှုအတွက် ၁၀၀% တာဝန်ယူပါတယ်။</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+                    <h4 class="font-extrabold text-indigo-700 mb-2 italic">Q. အကောင့်တစ်ခုခုဖြစ်ရင် တာဝန်ယူပေးလား?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed pl-4 border-l-4 border-indigo-100">ဟုတ်ကဲ့၊ အကောင့်နှင့်ပတ်သက်၍ နောက်နောင် ပြဿနာတစ်စုံတစ်ရာ ဖြစ်ပေါ်ပါကလည်း အစအဆုံး အခမဲ့ (Free) ပြန်လည် ဆောင်ရွက်ပေးသွားမှာ ဖြစ်ပါတယ်။</p>
                 </div>
             </div>
         </div>
+    </main>
+
+    <div class="marquee fixed bottom-0 left-0 w-full z-50">
+        <p>
+            <i class="fa-brands fa-line text-lg"></i> LINE ID: <span class="underline">0617718247</span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <i class="fa-solid fa-phone-volume"></i> ဖုန်း: <span class="underline">0617718247</span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            <span class="bg-white text-green-600 px-2 rounded font-black">အကောင့်ရမှ ငွေချေပါ</span> &nbsp;&nbsp; | &nbsp;&nbsp;
+            DOE ဝန်ဆောင်မှုများကို အမြန်ဆုံးနှင့် အမှန်ကန်ဆုံး ဆောင်ရွက်ပေးနေပါသည် &nbsp;&nbsp;
+        </p>
     </div>
 
-    <!-- Firebase Firestore Only SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <footer class="text-center py-10 text-slate-400 text-[10px]">
+        &copy; 2026 NYINYISOE DOE SERVICE. All Rights Reserved.
+    </footer>
 
-        // Your Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyA3WtuqOYsuv1LpGyj3pfWtsOnpAlUMfUc",
-            authDomain: "profile-card-7f6f7.firebaseapp.com",
-            projectId: "profile-card-7f6f7",
-            storageBucket: "profile-card-7f6f7.firebasestorage.app",
-            messagingSenderId: "154937714474",
-            appId: "1:154937714474:web:ce8e1a76d5fcc3b5bb2053",
-            measurementId: "G-MJR2JMWYEE"
-        };
-
-        // Initialize Firebase & Firestore Only
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        let base64ImgString = "https://via.placeholder.com/130";
-
-        window.updateColor = function(color) {
-            document.documentElement.style.setProperty('--main-color', color);
-        }
-
-        // ဓာတ်ပုံကို ရွေးလိုက်တာနဲ့ Size အသေးဆုံးဖြစ်အောင် ကျုံ့ပြီး စာသား (Base64) ပြောင်းတဲ့အပိုင်း
-        window.previewImage = function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        // Canvas သုံးပြီး ပုံကို 140x140 size အထိ ချုံ့ပစ်လိုက်ပါတယ် (Database နေရာမစားအောင်လို့ပါ)
-                        const canvas = document.createElement('canvas');
-                        canvas.width = 140;
-                        canvas.height = 140;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, 140, 140);
-                        
-                        // ပုံထွက်အရည်အသွေးကို 60% ထိ လျှော့ချပြီး စာသားပြောင်းပါတယ်
-                        base64ImgString = canvas.toDataURL('image/jpeg', 0.6);
-                        document.getElementById('displayImg').src = base64ImgString;
-                    }
-                    img.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        window.saveAsImage = function() {
-            const area = document.getElementById('captureArea');
-            html2canvas(area, { useCORS: true, scale: 3 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'profile-card.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-        }
-
-        // 1. Load data from Firebase Firestore
-        async function loadCardData() {
-            try {
-                const docRef = doc(db, "cards", "saved_card");
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('cardTitle').innerText = data.title || "DOE FOREIGNER";
-                    document.getElementById('cardName').innerText = data.name || "Name";
-                    document.getElementById('cardGmail').innerText = data.gmail || "yourname@hotmail.com";
-                    document.getElementById('cardPassword').innerText = data.password || "112025Day";
-                    document.getElementById('cardPin').innerText = data.pin || "112025";
-                    document.getElementById('cardRecovery').innerText = data.recovery || "အကောင့်ဆယ်ချင်သူများဆက်သွယ်ရန်";
-                    document.getElementById('cardLine').innerText = data.line || "Line ID: 0617718247";
-                    document.getElementById('cardPhone').innerText = data.phone || "0940460610";
-                    
-                    if(data.color) {
-                        document.getElementById('colorPicker').value = data.color;
-                        updateColor(data.color);
-                    }
-                    if (data.imageBase64) {
-                        base64ImgString = data.imageBase64;
-                        document.getElementById('displayImg').src = data.imageBase64;
-                    }
-                }
-            } catch (error) {
-                console.error("Error loading data: ", error);
-            }
-        }
-
-        // 2. Save only text & compressed image string to Firestore
-        window.uploadToFirebase = async function() {
-            const uploadBtn = document.getElementById('uploadBtn');
-            uploadBtn.innerText = "Saving... ⏳";
-            uploadBtn.disabled = true;
-
-            try {
-                const cardData = {
-                    title: document.getElementById('cardTitle').innerText,
-                    name: document.getElementById('cardName').innerText,
-                    gmail: document.getElementById('cardGmail').innerText,
-                    password: document.getElementById('cardPassword').innerText,
-                    pin: document.getElementById('cardPin').innerText,
-                    recovery: document.getElementById('cardRecovery').innerText,
-                    line: document.getElementById('cardLine').innerText,
-                    phone: document.getElementById('cardPhone').innerText,
-                    color: document.getElementById('colorPicker').value,
-                    imageBase64: base64ImgString, // ပုံကို စာသားပြောင်းပြီး ဒေတာဘေ့စ်ထဲမှာပဲ သိမ်းလိုက်ခြင်း
-                    updatedAt: new Date()
-                };
-
-                await setDoc(doc(db, "cards", "saved_card"), cardData);
-                alert("အချက်အလက်များကို အခမဲ့ Database ထဲသို့ အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ! 🎉");
-
-            } catch (error) {
-                console.error("Error saving data: ", error);
-                alert("ဒေတာသိမ်းလို့မရပါဘူး။ Firebase Console > Firestore Database > Rules ထဲမှာ Allow Read, Write: if true; လုပ်ထားလား ပြန်စစ်ပေးပါ။");
-            } finally {
-                uploadBtn.innerText = "Save Data ☁️";
-                uploadBtn.disabled = false;
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', loadCardData);
-    </script>
 </body>
 </html>
